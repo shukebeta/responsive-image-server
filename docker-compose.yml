@@ -1,0 +1,12 @@
+services:
+  nginx:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certbot-etc:/etc/letsencrypt
+      - /data/files:/files
+      - /data/nginx-images-cache:/nginx-images-cache
+    env_file:
+      - .env

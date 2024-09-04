@@ -7,5 +7,3 @@ services:
       - ./nginx-config:/etc/nginx/conf.d
       - /data/files:/files
       - /data/nginx-images-cache:/nginx-images-cache
-    env_file:
-      - .env

@@ -1,2 +1,0 @@
-# Renew the certificate every day at midnight
-0 0 * * * certbot renew --quiet && nginx -s reload

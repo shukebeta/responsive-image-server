@@ -2,10 +2,9 @@ services:
   nginx:
     build: .
     ports:
-      - "80:80"
-      - "443:443"
+      - "3333:80"
     volumes:
-      - ./certbot-etc:/etc/letsencrypt
+      - ./nginx-config:/etc/nginx/conf.d
       - /data/files:/files
       - /data/nginx-images-cache:/nginx-images-cache
     env_file:

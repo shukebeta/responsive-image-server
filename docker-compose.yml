@@ -3,6 +3,7 @@ services:
     build: .
     ports:
       - "3333:80"
+      - "4444:4444"
     volumes:
       - ./nginx-config:/etc/nginx/conf.d
       - /data/files:/files

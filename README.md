@@ -11,7 +11,6 @@ This project sets up a responsive image server using NGINX in Docker. The server
 ## Prerequisites
 
 - Docker installed on your system.
-- Docker Compose installed.
 
 ## Project Structure
 
@@ -31,7 +30,7 @@ This project sets up a responsive image server using NGINX in Docker. The server
 Clone the repository to your local machine:
 
 ```sh
-git clone <repository-url>
+git clone git@github.com:shukebeta/responsive-image-server.git
 cd responsive-image-server
 ```
 
@@ -40,8 +39,8 @@ cd responsive-image-server
 Create the directories for the image files and cache:
 
 ```sh
-mkdir -p /data/files
-mkdir -p /data/nginx-images-cache
+sudo mkdir -p /data/{files,nginx-images-cache}
+sudo chmod -R 777 /data/{files,nginx-images-cache}
 ```
 
 - `/data/files`: Directory where your original images are stored.
@@ -76,16 +75,25 @@ Once the server is running, you can access it on `http://localhost:3333`.
 To resize an image, use the following URL pattern:
 
 ```
-http://localhost:3333/{width}/{image_path}
+http://localhost:3333/{prefix}{size}/{image_path}
 ```
 
-- `{width}`: Desired width of the image.
+- `{prefix}`: `w` or empty for width, or use `h` for height.
+- `{size}`: Desired width or height of the image.
 - `{image_path}`: Path to the original image file stored in `/data/files`.
 
 For example, to resize an image named `example.jpg` to a width of `300px`, access:
 
 ```
 http://localhost:3333/300/example.jpg
+or 
+http://localhost:3333/w300/example.jpg
+```
+
+If you want to resize the same image to a height of 300,
+
+```
+http://localhost:3333/h300/example.jpg
 ```
 
 ## Configuration Details

@@ -1,0 +1,49 @@
+#!/bin/bash
+set -x -e
+
+REMOTE_SERVER=$1
+
+# Check if the remote server parameter is provided
+if [ -z "$REMOTE_SERVER" ]; then
+   echo "Usage: $0 machine-name"
+   exit 1
+fi
+
+# Variables for remote server and project
+REMOTE_PROJECT_DIR="~/responsive-image-server"
+REMOTE_SCRIPT="deploy_responsive-image-server.sh"
+
+# Step 1: Create the deployment script locally
+cat << EOF > /tmp/$REMOTE_SCRIPT
+#!/bin/bash
+set -e -x
+
+# Navigate to project directory, create if it doesn't exist
+mkdir -p $REMOTE_PROJECT_DIR
+cd $REMOTE_PROJECT_DIR
+
+# Pull the latest code from GitHub (master branch)
+if [ ! -d ".git" ]; then
+  git clone git@github.com:shukebeta/responsive-image-server.git .
+else
+  git pull origin master
+fi
+
+# Build and restart the Docker containers
+docker compose build --no-cache
+docker compose down
+docker compose up -d
+docker rmi -f \$(docker images -f dangling=true -q)
+EOF
+
+# Step 2: Copy the deployment script to the remote machine
+scp /tmp/$REMOTE_SCRIPT $REMOTE_SERVER:/tmp/
+
+# Step 3: Run the script on the remote machine via SSH
+ssh $REMOTE_SERVER "bash /tmp/$REMOTE_SCRIPT"
+
+# Step 4: Clean up the script from the remote machine
+ssh $REMOTE_SERVER "rm /tmp/$REMOTE_SCRIPT"
+
+echo "Deployment script executed on $REMOTE_SERVER."
+

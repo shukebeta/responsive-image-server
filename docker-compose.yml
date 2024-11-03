@@ -1,6 +1,7 @@
 services:
   nginx:
     build: .
+    restart: always
     ports:
       - "3333:80"
       - "4444:4444"
